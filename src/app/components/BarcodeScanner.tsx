@@ -17,18 +17,29 @@ export function BarcodeScanner({ onScan, onClose, isOpen }: BarcodeScannerProps)
   const [mode, setMode] = useState<'camera' | 'manual'>('camera');
   const [manualInput, setManualInput] = useState('');
   const [cameraError, setCameraError] = useState<string | null>(null);
+  const [cameraStarted, setCameraStarted] = useState(false);
   const scannerRef = useRef<Html5Qrcode | null>(null);
   const isScanning = useRef(false);
 
   useEffect(() => {
-    if (isOpen && mode === 'camera') {
-      startScanning();
+    if (!isOpen) {
+      stopScanning();
+      setCameraStarted(false);
+      return;
     }
-
+    if (mode !== 'camera') {
+      stopScanning();
+      return;
+    }
+    if (!cameraStarted) {
+      stopScanning();
+      return;
+    }
+    startScanning();
     return () => {
       stopScanning();
     };
-  }, [isOpen, mode]);
+  }, [isOpen, mode, cameraStarted]);
 
   const startScanning = async () => {
     if (isScanning.current) return;
@@ -119,7 +130,14 @@ export function BarcodeScanner({ onScan, onClose, isOpen }: BarcodeScannerProps)
   const handleClose = () => {
     stopScanning();
     setManualInput('');
+    setCameraStarted(false);
     onClose();
+  };
+
+  const handleStartCamera = () => {
+    setCameraError(null);
+    setCameraStarted(true);
+    startScanning();
   };
 
   return (
@@ -167,6 +185,24 @@ export function BarcodeScanner({ onScan, onClose, isOpen }: BarcodeScannerProps)
                     将条码对准相机进行扫描
                   </p>
                 </>
+              )}
+              <Button
+                type="button"
+                onClick={handleStartCamera}
+                className="w-full"
+                disabled={isScanning.current}
+              >
+                {isScanning.current ? '相机已启动' : '启动相机'}
+              </Button>
+              {cameraError && (
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={handleStartCamera}
+                  className="w-full"
+                >
+                  重试启动
+                </Button>
               )}
             </div>
           )}
