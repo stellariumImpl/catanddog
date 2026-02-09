@@ -1191,7 +1191,14 @@ export function More() {
                                 placeholder="减免金额"
                               />
                             </div>
-                            <Select value={editRuleScope} onValueChange={setEditRuleScope}>
+                            <Select
+                              value={editRuleScope}
+                              onValueChange={(value) =>
+                                setEditRuleScope(
+                                  value as "all" | "product" | "service",
+                                )
+                              }
+                            >
                               <SelectTrigger>
                                 <SelectValue placeholder="适用范围" />
                               </SelectTrigger>
@@ -1302,7 +1309,12 @@ export function More() {
                     onChange={(e) => setNewRuleAmount(e.target.value)}
                   />
                 </div>
-                <Select value={newRuleScope} onValueChange={setNewRuleScope}>
+                <Select
+                  value={newRuleScope}
+                  onValueChange={(value) =>
+                    setNewRuleScope(value as "all" | "product" | "service")
+                  }
+                >
                   <SelectTrigger>
                     <SelectValue placeholder="适用范围" />
                   </SelectTrigger>
@@ -1374,7 +1386,14 @@ export function More() {
                                 placeholder="减免金额"
                               />
                             </div>
-                            <Select value={editCouponScope} onValueChange={setEditCouponScope}>
+                            <Select
+                              value={editCouponScope}
+                              onValueChange={(value) =>
+                                setEditCouponScope(
+                                  value as "all" | "product" | "service",
+                                )
+                              }
+                            >
                               <SelectTrigger>
                                 <SelectValue placeholder="适用范围" />
                               </SelectTrigger>
@@ -1504,7 +1523,12 @@ export function More() {
                     onChange={(e) => setNewCouponAmount(e.target.value)}
                   />
                 </div>
-                <Select value={newCouponScope} onValueChange={setNewCouponScope}>
+                <Select
+                  value={newCouponScope}
+                  onValueChange={(value) =>
+                    setNewCouponScope(value as "all" | "product" | "service")
+                  }
+                >
                   <SelectTrigger>
                     <SelectValue placeholder="适用范围" />
                   </SelectTrigger>

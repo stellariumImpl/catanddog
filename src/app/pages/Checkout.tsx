@@ -336,16 +336,16 @@ export function Checkout() {
     const activeRules = discountRules.filter(
       (rule) => rule.enabled && isActiveByDate(rule.startAt, rule.endAt)
     );
-    let bestRule: { id: string; name: string; amount: number } | null = null;
+    let bestRule = { id: "", name: "", amount: 0 };
     activeRules.forEach((rule) => {
       const eligibleTotal = sumByScope(cartItems, rule.scope);
       if (eligibleTotal < rule.threshold) return;
       const amount = roundMoney(Math.min(rule.amount, eligibleTotal));
-      if (!bestRule || amount > bestRule.amount) {
+      if (amount > bestRule.amount) {
         bestRule = { id: rule.id, name: rule.name, amount };
       }
     });
-    if (bestRule && bestRule.amount > 0) {
+    if (bestRule.amount > 0) {
       candidates.push({
         type: "full_reduction",
         name: bestRule.name,
