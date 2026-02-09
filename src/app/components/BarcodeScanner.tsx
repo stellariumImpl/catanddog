@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Html5Qrcode } from 'html5-qrcode';
+import { Html5Qrcode, Html5QrcodeSupportedFormats } from 'html5-qrcode';
 import { Camera, X, Keyboard } from 'lucide-react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
@@ -34,12 +34,24 @@ export function BarcodeScanner({ onScan, onClose, isOpen }: BarcodeScannerProps)
     if (isScanning.current) return;
 
     try {
-      const scanner = new Html5Qrcode('qr-reader');
+      const scanner = new Html5Qrcode('qr-reader', {
+        formatsToSupport: [
+          Html5QrcodeSupportedFormats.QR_CODE,
+          Html5QrcodeSupportedFormats.EAN_13,
+          Html5QrcodeSupportedFormats.EAN_8,
+          Html5QrcodeSupportedFormats.UPC_A,
+          Html5QrcodeSupportedFormats.UPC_E,
+          Html5QrcodeSupportedFormats.CODE_128,
+          Html5QrcodeSupportedFormats.CODE_39,
+          Html5QrcodeSupportedFormats.ITF,
+        ],
+        useBarCodeDetectorIfSupported: true,
+      });
       scannerRef.current = scanner;
       isScanning.current = true;
 
       await scanner.start(
-        { facingMode: 'environment' },
+        { facingMode: { ideal: 'environment' } },
         {
           fps: 10,
           qrbox: { width: 250, height: 250 },
@@ -56,7 +68,28 @@ export function BarcodeScanner({ onScan, onClose, isOpen }: BarcodeScannerProps)
       setCameraError(null);
     } catch (err) {
       console.error('Camera error:', err);
-      setCameraError('无法启动相机，请使用手动输入或检查相机权限');
+      const message =
+        typeof err === 'string'
+          ? err
+          : err && typeof err === 'object' && 'message' in err
+            ? String((err as { message?: string }).message)
+            : '';
+      const normalized = message.toLowerCase();
+      if (
+        normalized.includes('notallowed') ||
+        normalized.includes('permission') ||
+        normalized.includes('denied')
+      ) {
+        setCameraError('相机权限被拒绝，请在浏览器设置中允许访问相机');
+      } else if (normalized.includes('notfound') || normalized.includes('device')) {
+        setCameraError('未检测到相机设备，请检查是否被系统占用');
+      } else if (normalized.includes('notreadable') || normalized.includes('track')) {
+        setCameraError('相机被占用或不可用，请关闭其他占用相机的应用');
+      } else if (normalized.includes('insecure') || normalized.includes('https')) {
+        setCameraError('相机仅支持 HTTPS 环境，请确认使用 https:// 访问');
+      } else {
+        setCameraError('无法启动相机，请使用手动输入或检查相机权限');
+      }
       isScanning.current = false;
     }
   };
