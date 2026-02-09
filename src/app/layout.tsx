@@ -2,8 +2,8 @@ import "../styles/index.css";
 import { Providers } from "./providers";
 
 export const metadata = {
-  title: "宠物店门店系统",
-  description: "专业的门店管理解决方案",
+  title: "老友记宠物收银系统",
+  description: "专业 高效 智能",
 };
 
 export default function RootLayout({
