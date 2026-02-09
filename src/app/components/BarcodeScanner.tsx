@@ -45,6 +45,24 @@ export function BarcodeScanner({ onScan, onClose, isOpen }: BarcodeScannerProps)
     if (isScanning.current) return;
 
     try {
+      const cameras = await Html5Qrcode.getCameras().catch((err) => {
+        const message =
+          typeof err === 'string'
+            ? err
+            : err && typeof err === 'object' && 'message' in err
+              ? String((err as { message?: string }).message)
+              : '';
+        const name =
+          err && typeof err === 'object' && 'name' in err
+            ? String((err as { name?: string }).name)
+            : '';
+        const detail = [name, message].filter(Boolean).join(': ');
+        throw new Error(detail || 'getCameras failed');
+      });
+      if (!cameras || cameras.length === 0) {
+        setCameraError('未检测到相机设备或权限被拒绝');
+        return;
+      }
       const scanner = new Html5Qrcode('qr-reader', {
         formatsToSupport: [
           Html5QrcodeSupportedFormats.QR_CODE,
@@ -86,21 +104,28 @@ export function BarcodeScanner({ onScan, onClose, isOpen }: BarcodeScannerProps)
           : err && typeof err === 'object' && 'message' in err
             ? String((err as { message?: string }).message)
             : '';
-      const normalized = message.toLowerCase();
+      const name =
+        err && typeof err === 'object' && 'name' in err
+          ? String((err as { name?: string }).name)
+          : '';
+      const detail = [name, message].filter(Boolean).join(': ');
+      const normalized = detail.toLowerCase();
       if (
         normalized.includes('notallowed') ||
         normalized.includes('permission') ||
         normalized.includes('denied')
       ) {
-        setCameraError('相机权限被拒绝，请在浏览器设置中允许访问相机');
+        setCameraError(`相机权限被拒绝，请在浏览器设置中允许访问相机。${detail}`);
       } else if (normalized.includes('notfound') || normalized.includes('device')) {
-        setCameraError('未检测到相机设备，请检查是否被系统占用');
+        setCameraError(`未检测到相机设备，请检查是否被系统占用。${detail}`);
       } else if (normalized.includes('notreadable') || normalized.includes('track')) {
-        setCameraError('相机被占用或不可用，请关闭其他占用相机的应用');
+        setCameraError(`相机被占用或不可用，请关闭其他占用相机的应用。${detail}`);
       } else if (normalized.includes('insecure') || normalized.includes('https')) {
-        setCameraError('相机仅支持 HTTPS 环境，请确认使用 https:// 访问');
+        setCameraError(`相机仅支持 HTTPS 环境，请确认使用 https:// 访问。${detail}`);
+      } else if (normalized.includes('element with id')) {
+        setCameraError(`相机渲染容器未找到，请关闭弹窗后重试。${detail}`);
       } else {
-        setCameraError('无法启动相机，请使用手动输入或检查相机权限');
+        setCameraError(`无法启动相机，请使用手动输入或检查相机权限。${detail}`);
       }
       isScanning.current = false;
     }
