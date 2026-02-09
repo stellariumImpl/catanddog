@@ -46,6 +46,7 @@ export function BarcodeScanner({ onScan, onClose, isOpen }: BarcodeScannerProps)
           Html5QrcodeSupportedFormats.ITF,
         ],
         useBarCodeDetectorIfSupported: true,
+        verbose: false,
       });
       scannerRef.current = scanner;
       isScanning.current = true;
