@@ -81,7 +81,7 @@ export function BarcodeScanner({ onScan, onClose, isOpen }: BarcodeScannerProps)
       isScanning.current = true;
 
       await scanner.start(
-        { facingMode: { ideal: 'environment' } },
+        { facingMode: 'environment' },
         {
           fps: 10,
           qrbox: { width: 250, height: 250 },
