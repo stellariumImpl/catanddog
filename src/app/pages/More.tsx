@@ -1,21 +1,26 @@
 "use client";
 
-import React, { useEffect, useState } from 'react';
-import { useAuth } from '../contexts/AuthContext';
-import { useData, Order, Customer } from '../contexts/DataContext';
-import { Button } from '../components/ui/button';
-import { Badge } from '../components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
-import { Input } from '../components/ui/input';
-import { Label } from '../components/ui/label';
-import { Switch } from '../components/ui/switch';
+import React, { useEffect, useState } from "react";
+import { useAuth } from "../contexts/AuthContext";
+import { useData, Order, Customer } from "../contexts/DataContext";
+import { Button } from "../components/ui/button";
+import { Badge } from "../components/ui/badge";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "../components/ui/tabs";
+import { Input } from "../components/ui/input";
+import { Label } from "../components/ui/label";
+import { Switch } from "../components/ui/switch";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '../components/ui/select';
+} from "../components/ui/select";
 import {
   Receipt,
   FileText,
@@ -29,14 +34,14 @@ import {
   Tag,
   Trash2,
   Calendar,
-} from 'lucide-react';
-import { toast } from 'sonner';
+} from "lucide-react";
+import { toast } from "sonner";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-} from '../components/ui/dialog';
+} from "../components/ui/dialog";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -46,7 +51,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from '../components/ui/alert-dialog';
+} from "../components/ui/alert-dialog";
 
 export function More() {
   const { user, logout } = useAuth();
@@ -75,52 +80,60 @@ export function More() {
   const [showReceipt, setShowReceipt] = useState(false);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const [showMembers, setShowMembers] = useState(false);
-  const [memberSearch, setMemberSearch] = useState('');
+  const [memberSearch, setMemberSearch] = useState("");
   const [selectedMember, setSelectedMember] = useState<Customer | null>(null);
-  const [rechargeAmount, setRechargeAmount] = useState('');
-  const [adjustAmount, setAdjustAmount] = useState('');
-  const [adjustNote, setAdjustNote] = useState('');
+  const [rechargeAmount, setRechargeAmount] = useState("");
+  const [adjustAmount, setAdjustAmount] = useState("");
+  const [adjustNote, setAdjustNote] = useState("");
   const [showRefundDialog, setShowRefundDialog] = useState(false);
   const [refundTarget, setRefundTarget] = useState<Order | null>(null);
-  const [refundAmount, setRefundAmount] = useState('');
-  const [refundReason, setRefundReason] = useState('');
+  const [refundAmount, setRefundAmount] = useState("");
+  const [refundReason, setRefundReason] = useState("");
   const [showDiscounts, setShowDiscounts] = useState(false);
   const [memberDiscountInput, setMemberDiscountInput] = useState(
-    (storeSettings.memberDiscountRate * 100).toFixed(0)
+    (storeSettings.memberDiscountRate * 100).toFixed(0),
   );
-  const [newRuleName, setNewRuleName] = useState('');
-  const [newRuleThreshold, setNewRuleThreshold] = useState('');
-  const [newRuleAmount, setNewRuleAmount] = useState('');
-  const [newRuleScope, setNewRuleScope] = useState<'all' | 'product' | 'service'>('all');
-  const [newRuleStart, setNewRuleStart] = useState('');
-  const [newRuleEnd, setNewRuleEnd] = useState('');
+  const [newRuleName, setNewRuleName] = useState("");
+  const [newRuleThreshold, setNewRuleThreshold] = useState("");
+  const [newRuleAmount, setNewRuleAmount] = useState("");
+  const [newRuleScope, setNewRuleScope] = useState<
+    "all" | "product" | "service"
+  >("all");
+  const [newRuleStart, setNewRuleStart] = useState("");
+  const [newRuleEnd, setNewRuleEnd] = useState("");
   const [editingRuleId, setEditingRuleId] = useState<string | null>(null);
-  const [editRuleName, setEditRuleName] = useState('');
-  const [editRuleThreshold, setEditRuleThreshold] = useState('');
-  const [editRuleAmount, setEditRuleAmount] = useState('');
-  const [editRuleScope, setEditRuleScope] = useState<'all' | 'product' | 'service'>('all');
-  const [editRuleStart, setEditRuleStart] = useState('');
-  const [editRuleEnd, setEditRuleEnd] = useState('');
-  const [newCouponName, setNewCouponName] = useState('');
-  const [newCouponCode, setNewCouponCode] = useState('');
-  const [newCouponThreshold, setNewCouponThreshold] = useState('');
-  const [newCouponAmount, setNewCouponAmount] = useState('');
-  const [newCouponScope, setNewCouponScope] = useState<'all' | 'product' | 'service'>('all');
-  const [newCouponUsageLimit, setNewCouponUsageLimit] = useState('');
-  const [newCouponStart, setNewCouponStart] = useState('');
-  const [newCouponEnd, setNewCouponEnd] = useState('');
+  const [editRuleName, setEditRuleName] = useState("");
+  const [editRuleThreshold, setEditRuleThreshold] = useState("");
+  const [editRuleAmount, setEditRuleAmount] = useState("");
+  const [editRuleScope, setEditRuleScope] = useState<
+    "all" | "product" | "service"
+  >("all");
+  const [editRuleStart, setEditRuleStart] = useState("");
+  const [editRuleEnd, setEditRuleEnd] = useState("");
+  const [newCouponName, setNewCouponName] = useState("");
+  const [newCouponCode, setNewCouponCode] = useState("");
+  const [newCouponThreshold, setNewCouponThreshold] = useState("");
+  const [newCouponAmount, setNewCouponAmount] = useState("");
+  const [newCouponScope, setNewCouponScope] = useState<
+    "all" | "product" | "service"
+  >("all");
+  const [newCouponUsageLimit, setNewCouponUsageLimit] = useState("");
+  const [newCouponStart, setNewCouponStart] = useState("");
+  const [newCouponEnd, setNewCouponEnd] = useState("");
   const [editingCouponId, setEditingCouponId] = useState<string | null>(null);
-  const [editCouponName, setEditCouponName] = useState('');
-  const [editCouponCode, setEditCouponCode] = useState('');
-  const [editCouponThreshold, setEditCouponThreshold] = useState('');
-  const [editCouponAmount, setEditCouponAmount] = useState('');
-  const [editCouponScope, setEditCouponScope] = useState<'all' | 'product' | 'service'>('all');
-  const [editCouponUsageLimit, setEditCouponUsageLimit] = useState('');
-  const [editCouponStart, setEditCouponStart] = useState('');
-  const [editCouponEnd, setEditCouponEnd] = useState('');
+  const [editCouponName, setEditCouponName] = useState("");
+  const [editCouponCode, setEditCouponCode] = useState("");
+  const [editCouponThreshold, setEditCouponThreshold] = useState("");
+  const [editCouponAmount, setEditCouponAmount] = useState("");
+  const [editCouponScope, setEditCouponScope] = useState<
+    "all" | "product" | "service"
+  >("all");
+  const [editCouponUsageLimit, setEditCouponUsageLimit] = useState("");
+  const [editCouponStart, setEditCouponStart] = useState("");
+  const [editCouponEnd, setEditCouponEnd] = useState("");
 
   const confirmedOrders = orders
-    .filter((o) => o.status === 'confirmed' || o.status === 'refunded')
+    .filter((o) => o.status === "confirmed" || o.status === "refunded")
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
   const filteredMembers = customers.filter((member) => {
@@ -141,48 +154,51 @@ export function More() {
   const getOrderRefunds = (orderId: string) =>
     refunds
       .filter((refund) => refund.orderId === orderId)
-      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+      .sort(
+        (a, b) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+      );
 
   const handleRecharge = () => {
     if (!selectedMember) return;
     const amount = parseFloat(rechargeAmount);
     if (Number.isNaN(amount) || amount <= 0) {
-      toast.error('充值金额无效');
+      toast.error("充值金额无效");
       return;
     }
     recordCustomerLedger(
       selectedMember.id,
-      'recharge',
+      "recharge",
       amount,
-      adjustNote || '会员充值'
+      adjustNote || "会员充值",
     );
-    setRechargeAmount('');
-    setAdjustNote('');
-    toast.success('充值成功');
+    setRechargeAmount("");
+    setAdjustNote("");
+    toast.success("充值成功");
   };
 
   const handleAdjust = () => {
     if (!selectedMember) return;
     const amount = parseFloat(adjustAmount);
     if (Number.isNaN(amount) || amount === 0) {
-      toast.error('调账金额无效');
+      toast.error("调账金额无效");
       return;
     }
     recordCustomerLedger(
       selectedMember.id,
-      'adjust',
+      "adjust",
       amount,
-      adjustNote || '余额调整'
+      adjustNote || "余额调整",
     );
-    setAdjustAmount('');
-    setAdjustNote('');
-    toast.success('余额已调整');
+    setAdjustAmount("");
+    setAdjustNote("");
+    toast.success("余额已调整");
   };
 
   const handleCopyReceiptLink = (orderId: string) => {
     const link = `${window.location.origin}/receipt/${orderId}`;
     navigator.clipboard.writeText(link);
-    toast.success('凭证链接已复制');
+    toast.success("凭证链接已复制");
   };
 
   const handleViewReceipt = (order: Order) => {
@@ -192,16 +208,16 @@ export function More() {
 
   const handleLogout = () => {
     logout();
-    toast.success('已退出登录');
+    toast.success("已退出登录");
   };
 
   const toDateInput = (value?: string | null) => {
-    if (!value) return '';
-    if (value.includes('T')) return value.slice(0, 10);
+    if (!value) return "";
+    if (value.includes("T")) return value.slice(0, 10);
     return value;
   };
 
-  const openEditRule = (rule: typeof discountRules[number]) => {
+  const openEditRule = (rule: (typeof discountRules)[number]) => {
     setEditingRuleId(rule.id);
     setEditRuleName(rule.name);
     setEditRuleThreshold(String(rule.threshold));
@@ -215,21 +231,25 @@ export function More() {
     if (!editingRuleId) return;
     const name = editRuleName.trim();
     if (!name) {
-      toast.error('请输入满减活动名称');
+      toast.error("请输入满减活动名称");
       return;
     }
     const threshold = parseFloat(editRuleThreshold);
     const amount = parseFloat(editRuleAmount);
     if (Number.isNaN(threshold) || threshold <= 0) {
-      toast.error('满减门槛无效');
+      toast.error("满减门槛无效");
       return;
     }
     if (Number.isNaN(amount) || amount <= 0) {
-      toast.error('减免金额无效');
+      toast.error("减免金额无效");
       return;
     }
-    if (editRuleStart && editRuleEnd && new Date(editRuleStart) > new Date(editRuleEnd)) {
-      toast.error('开始日期不能晚于结束日期');
+    if (
+      editRuleStart &&
+      editRuleEnd &&
+      new Date(editRuleStart) > new Date(editRuleEnd)
+    ) {
+      toast.error("开始日期不能晚于结束日期");
       return;
     }
     updateDiscountRule(editingRuleId, {
@@ -241,18 +261,18 @@ export function More() {
       endAt: editRuleEnd || undefined,
     });
     setEditingRuleId(null);
-    toast.success('满减活动已更新');
+    toast.success("满减活动已更新");
   };
 
-  const openEditCoupon = (coupon: typeof coupons[number]) => {
+  const openEditCoupon = (coupon: (typeof coupons)[number]) => {
     setEditingCouponId(coupon.id);
     setEditCouponName(coupon.name);
-    setEditCouponCode(coupon.code || '');
-    setEditCouponThreshold(coupon.threshold ? String(coupon.threshold) : '');
+    setEditCouponCode(coupon.code || "");
+    setEditCouponThreshold(coupon.threshold ? String(coupon.threshold) : "");
     setEditCouponAmount(String(coupon.amount));
     setEditCouponScope(coupon.scope);
     setEditCouponUsageLimit(
-      typeof coupon.usageLimit === 'number' ? String(coupon.usageLimit) : ''
+      typeof coupon.usageLimit === "number" ? String(coupon.usageLimit) : "",
     );
     setEditCouponStart(toDateInput(coupon.startAt));
     setEditCouponEnd(toDateInput(coupon.endAt));
@@ -262,19 +282,22 @@ export function More() {
     if (!editingCouponId) return;
     const name = editCouponName.trim();
     if (!name) {
-      toast.error('请输入优惠券名称');
+      toast.error("请输入优惠券名称");
       return;
     }
     const amount = parseFloat(editCouponAmount);
     if (Number.isNaN(amount) || amount <= 0) {
-      toast.error('优惠券金额无效');
+      toast.error("优惠券金额无效");
       return;
     }
     const threshold = editCouponThreshold.trim()
       ? parseFloat(editCouponThreshold)
       : undefined;
-    if (editCouponThreshold.trim() && (Number.isNaN(threshold) || threshold! <= 0)) {
-      toast.error('优惠券门槛无效');
+    if (
+      editCouponThreshold.trim() &&
+      (Number.isNaN(threshold) || threshold! <= 0)
+    ) {
+      toast.error("优惠券门槛无效");
       return;
     }
     const usageLimit = editCouponUsageLimit.trim()
@@ -284,11 +307,15 @@ export function More() {
       editCouponUsageLimit.trim() &&
       (Number.isNaN(usageLimit) || usageLimit! <= 0)
     ) {
-      toast.error('使用次数限制无效');
+      toast.error("使用次数限制无效");
       return;
     }
-    if (editCouponStart && editCouponEnd && new Date(editCouponStart) > new Date(editCouponEnd)) {
-      toast.error('开始日期不能晚于结束日期');
+    if (
+      editCouponStart &&
+      editCouponEnd &&
+      new Date(editCouponStart) > new Date(editCouponEnd)
+    ) {
+      toast.error("开始日期不能晚于结束日期");
       return;
     }
     updateCoupon(editingCouponId, {
@@ -302,7 +329,7 @@ export function More() {
       endAt: editCouponEnd || undefined,
     });
     setEditingCouponId(null);
-    toast.success('优惠券已更新');
+    toast.success("优惠券已更新");
   };
   useEffect(() => {
     setMemberDiscountInput((storeSettings.memberDiscountRate * 100).toFixed(0));
@@ -311,31 +338,35 @@ export function More() {
   const handleSaveMemberDiscount = () => {
     const percent = parseFloat(memberDiscountInput);
     if (Number.isNaN(percent) || percent <= 0 || percent > 100) {
-      toast.error('会员折扣率需在 1-100 之间');
+      toast.error("会员折扣率需在 1-100 之间");
       return;
     }
     updateStoreSettings({ memberDiscountRate: percent / 100 });
-    toast.success('会员折扣已更新');
+    toast.success("会员折扣已更新");
   };
 
   const handleAddRule = () => {
     const name = newRuleName.trim();
     if (!name) {
-      toast.error('请输入满减活动名称');
+      toast.error("请输入满减活动名称");
       return;
     }
     const threshold = parseFloat(newRuleThreshold);
     const amount = parseFloat(newRuleAmount);
     if (Number.isNaN(threshold) || threshold <= 0) {
-      toast.error('满减门槛无效');
+      toast.error("满减门槛无效");
       return;
     }
     if (Number.isNaN(amount) || amount <= 0) {
-      toast.error('减免金额无效');
+      toast.error("减免金额无效");
       return;
     }
-    if (newRuleStart && newRuleEnd && new Date(newRuleStart) > new Date(newRuleEnd)) {
-      toast.error('开始日期不能晚于结束日期');
+    if (
+      newRuleStart &&
+      newRuleEnd &&
+      new Date(newRuleStart) > new Date(newRuleEnd)
+    ) {
+      toast.error("开始日期不能晚于结束日期");
       return;
     }
     addDiscountRule({
@@ -347,31 +378,34 @@ export function More() {
       endAt: newRuleEnd || undefined,
       enabled: true,
     });
-    setNewRuleName('');
-    setNewRuleThreshold('');
-    setNewRuleAmount('');
-    setNewRuleScope('all');
-    setNewRuleStart('');
-    setNewRuleEnd('');
-    toast.success('满减活动已添加');
+    setNewRuleName("");
+    setNewRuleThreshold("");
+    setNewRuleAmount("");
+    setNewRuleScope("all");
+    setNewRuleStart("");
+    setNewRuleEnd("");
+    toast.success("满减活动已添加");
   };
 
   const handleAddCoupon = () => {
     const name = newCouponName.trim();
     if (!name) {
-      toast.error('请输入优惠券名称');
+      toast.error("请输入优惠券名称");
       return;
     }
     const amount = parseFloat(newCouponAmount);
     if (Number.isNaN(amount) || amount <= 0) {
-      toast.error('优惠券金额无效');
+      toast.error("优惠券金额无效");
       return;
     }
     const threshold = newCouponThreshold.trim()
       ? parseFloat(newCouponThreshold)
       : undefined;
-    if (newCouponThreshold.trim() && (Number.isNaN(threshold) || threshold! <= 0)) {
-      toast.error('优惠券门槛无效');
+    if (
+      newCouponThreshold.trim() &&
+      (Number.isNaN(threshold) || threshold! <= 0)
+    ) {
+      toast.error("优惠券门槛无效");
       return;
     }
     const usageLimit = newCouponUsageLimit.trim()
@@ -381,11 +415,15 @@ export function More() {
       newCouponUsageLimit.trim() &&
       (Number.isNaN(usageLimit) || usageLimit! <= 0)
     ) {
-      toast.error('使用次数限制无效');
+      toast.error("使用次数限制无效");
       return;
     }
-    if (newCouponStart && newCouponEnd && new Date(newCouponStart) > new Date(newCouponEnd)) {
-      toast.error('开始日期不能晚于结束日期');
+    if (
+      newCouponStart &&
+      newCouponEnd &&
+      new Date(newCouponStart) > new Date(newCouponEnd)
+    ) {
+      toast.error("开始日期不能晚于结束日期");
       return;
     }
     addCoupon({
@@ -399,49 +437,52 @@ export function More() {
       endAt: newCouponEnd || undefined,
       enabled: true,
     });
-    setNewCouponName('');
-    setNewCouponCode('');
-    setNewCouponThreshold('');
-    setNewCouponAmount('');
-    setNewCouponScope('all');
-    setNewCouponUsageLimit('');
-    setNewCouponStart('');
-    setNewCouponEnd('');
-    toast.success('优惠券已添加');
+    setNewCouponName("");
+    setNewCouponCode("");
+    setNewCouponThreshold("");
+    setNewCouponAmount("");
+    setNewCouponScope("all");
+    setNewCouponUsageLimit("");
+    setNewCouponStart("");
+    setNewCouponEnd("");
+    toast.success("优惠券已添加");
   };
 
   const getMaxRefundAmount = (order: Order) =>
-    typeof order.paymentAmount === 'number' ? order.paymentAmount : order.total;
+    typeof order.paymentAmount === "number" ? order.paymentAmount : order.total;
 
   const handleOpenRefund = (order: Order) => {
     setRefundTarget(order);
     setRefundAmount(getMaxRefundAmount(order).toFixed(2));
-    setRefundReason('');
+    setRefundReason("");
     setShowRefundDialog(true);
   };
 
   const handleConfirmRefund = () => {
     if (!refundTarget) return;
-    if (refundTarget.status === 'refunded' || refundTarget.paymentStatus === 'refunded') {
-      toast.error('该订单已退款');
+    if (
+      refundTarget.status === "refunded" ||
+      refundTarget.paymentStatus === "refunded"
+    ) {
+      toast.error("该订单已退款");
       return;
     }
-    if (refundTarget.paymentStatus !== 'paid') {
-      toast.error('仅支持已支付订单退款');
+    if (refundTarget.paymentStatus !== "paid") {
+      toast.error("仅支持已支付订单退款");
       return;
     }
     const amountValue = parseFloat(refundAmount);
     if (Number.isNaN(amountValue) || amountValue <= 0) {
-      toast.error('退款金额无效');
+      toast.error("退款金额无效");
       return;
     }
     const maxAmount = getMaxRefundAmount(refundTarget);
     if (amountValue > maxAmount) {
-      toast.error('退款金额不能大于实收金额');
+      toast.error("退款金额不能大于实收金额");
       return;
     }
     refundOrder(refundTarget.id, amountValue, refundReason.trim() || undefined);
-    toast.success('退款已提交');
+    toast.success("退款已提交");
     setShowRefundDialog(false);
     setRefundTarget(null);
   };
@@ -452,7 +493,9 @@ export function More() {
       <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-6 rounded-b-3xl">
         <div className="flex items-center gap-4">
           <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center">
-            <span className="text-2xl font-bold">{user?.username?.[0]?.toUpperCase()}</span>
+            <span className="text-2xl font-bold">
+              {user?.username?.[0]?.toUpperCase()}
+            </span>
           </div>
           <div>
             <div className="text-xl font-semibold">{user?.username}</div>
@@ -489,9 +532,9 @@ export function More() {
                   >
                     {(() => {
                       const orderPaid =
-                        typeof order.paymentAmount === 'number'
+                        typeof order.paymentAmount === "number"
                           ? order.paymentAmount
-                          : typeof order.payableTotal === 'number'
+                          : typeof order.payableTotal === "number"
                             ? order.payableTotal
                             : order.total;
                       return (
@@ -505,7 +548,7 @@ export function More() {
                                 订单ID：{order.id}
                               </div>
                               <div className="text-sm text-gray-500 mt-1">
-                                {new Date(order.date).toLocaleString('zh-CN')}
+                                {new Date(order.date).toLocaleString("zh-CN")}
                               </div>
                             </div>
                             <div className="text-right">
@@ -513,24 +556,33 @@ export function More() {
                                 ¥{orderPaid.toFixed(2)}
                               </div>
                               <Badge
-                                variant={order.status === 'refunded' ? 'destructive' : 'secondary'}
+                                variant={
+                                  order.status === "refunded"
+                                    ? "destructive"
+                                    : "secondary"
+                                }
                                 className="mt-1"
                               >
-                                {order.status === 'refunded' ? '已退款' : '已完成'}
+                                {order.status === "refunded"
+                                  ? "已退款"
+                                  : "已完成"}
                               </Badge>
                             </div>
                           </div>
 
                           {order.customer && (
                             <div className="text-sm text-gray-600 mt-2">
-                              客户: {order.customer.name || order.customer.phone}
+                              客户:{" "}
+                              {order.customer.name || order.customer.phone}
                             </div>
                           )}
                           <div className="flex items-center justify-between text-xs text-gray-500 mt-2">
-                            <span>支付方式：{order.paymentMethod || '未记录'}</span>
+                            <span>
+                              支付方式：{order.paymentMethod || "未记录"}
+                            </span>
                             <span>实收：¥{orderPaid.toFixed(2)}</span>
                           </div>
-                          {order.status !== 'refunded' && (
+                          {order.status !== "refunded" && (
                             <div className="flex justify-end mt-3">
                               <Button
                                 size="sm"
@@ -565,9 +617,9 @@ export function More() {
                   const order = orders.find((o) => o.id === receipt.orderId);
                   if (!order) return null;
                   const orderPaid =
-                    typeof order.paymentAmount === 'number'
+                    typeof order.paymentAmount === "number"
                       ? order.paymentAmount
-                      : typeof order.payableTotal === 'number'
+                      : typeof order.payableTotal === "number"
                         ? order.payableTotal
                         : order.total;
 
@@ -585,7 +637,9 @@ export function More() {
                             凭证号：{receipt.id}
                           </div>
                           <div className="text-sm text-gray-500 mt-1">
-                            {new Date(receipt.createdAt).toLocaleString('zh-CN')}
+                            {new Date(receipt.createdAt).toLocaleString(
+                              "zh-CN",
+                            )}
                           </div>
                         </div>
                         <div className="text-lg font-semibold text-gray-900">
@@ -593,7 +647,7 @@ export function More() {
                         </div>
                       </div>
 
-                      {order.status === 'refunded' && (
+                      {order.status === "refunded" && (
                         <div className="text-xs text-red-600 mb-2">
                           该订单已退款
                         </div>
@@ -698,7 +752,7 @@ export function More() {
               {/* Store Info */}
               <div className="text-center border-b pb-4">
                 <div className="text-xl font-bold">
-                  {user?.storeName || '宠物店门店系统'}
+                  {user?.storeName || "老友记宠物收银系统"}
                 </div>
                 <div className="text-sm text-gray-500 mt-2">
                   电子凭证 · {selectedOrder.orderNo || selectedOrder.id}
@@ -713,20 +767,27 @@ export function More() {
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-600">订单时间</span>
-                  <span>{new Date(selectedOrder.date).toLocaleString('zh-CN')}</span>
+                  <span>
+                    {new Date(selectedOrder.date).toLocaleString("zh-CN")}
+                  </span>
                 </div>
                 {selectedOrder.customer && (
                   <div className="flex justify-between text-sm">
                     <span className="text-gray-600">客户信息</span>
                     <span>
-                      {selectedOrder.customer.name || selectedOrder.customer.phone}
+                      {selectedOrder.customer.name ||
+                        selectedOrder.customer.phone}
                     </span>
                   </div>
                 )}
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-600">订单状态</span>
-                  <span className={selectedOrder.status === 'refunded' ? 'text-red-600' : ''}>
-                    {selectedOrder.status === 'refunded' ? '已退款' : '已完成'}
+                  <span
+                    className={
+                      selectedOrder.status === "refunded" ? "text-red-600" : ""
+                    }
+                  >
+                    {selectedOrder.status === "refunded" ? "已退款" : "已完成"}
                   </span>
                 </div>
                 {selectedOrder.paymentMethod && (
@@ -735,20 +796,20 @@ export function More() {
                     <span>{selectedOrder.paymentMethod}</span>
                   </div>
                 )}
-                {typeof selectedOrder.discountAmount === 'number' &&
+                {typeof selectedOrder.discountAmount === "number" &&
                   selectedOrder.discountAmount > 0 && (
                     <div className="flex justify-between text-sm">
                       <span className="text-gray-600">优惠金额</span>
                       <span>-¥{selectedOrder.discountAmount.toFixed(2)}</span>
                     </div>
                   )}
-                {typeof selectedOrder.payableTotal === 'number' && (
+                {typeof selectedOrder.payableTotal === "number" && (
                   <div className="flex justify-between text-sm">
                     <span className="text-gray-600">应收金额</span>
                     <span>¥{selectedOrder.payableTotal.toFixed(2)}</span>
                   </div>
                 )}
-                {typeof selectedOrder.paymentAmount === 'number' && (
+                {typeof selectedOrder.paymentAmount === "number" && (
                   <div className="flex justify-between text-sm">
                     <span className="text-gray-600">实收金额</span>
                     <span>¥{selectedOrder.paymentAmount.toFixed(2)}</span>
@@ -761,20 +822,21 @@ export function More() {
                 <div className="font-medium">项目明细</div>
                 {selectedOrder.items.map((item, index) => {
                   const product =
-                    item.type === 'product' && item.productId
+                    item.type === "product" && item.productId
                       ? getProductById(item.productId)
                       : undefined;
                   const service =
-                    item.type === 'service' && item.serviceId
+                    item.type === "service" && item.serviceId
                       ? getServiceById(item.serviceId)
                       : undefined;
-                  const itemName = product?.name || service?.name || item.name || '项目';
+                  const itemName =
+                    product?.name || service?.name || item.name || "项目";
                   return (
                     <div key={index} className="flex justify-between text-sm">
                       <div className="flex-1">
                         <div>
                           {itemName}
-                          {item.type === 'service' ? '（服务）' : ''}
+                          {item.type === "service" ? "（服务）" : ""}
                         </div>
                         <div className="text-gray-500">
                           ¥{item.price.toFixed(2)} × {item.quantity}
@@ -809,7 +871,7 @@ export function More() {
                           退款 ¥{refund.amount.toFixed(2)}
                         </div>
                         <div className="text-xs text-gray-500">
-                          {new Date(refund.createdAt).toLocaleString('zh-CN')}
+                          {new Date(refund.createdAt).toLocaleString("zh-CN")}
                         </div>
                         {refund.reason && (
                           <div className="text-xs text-gray-500 mt-1">
@@ -864,7 +926,7 @@ export function More() {
                   实收金额：¥{getMaxRefundAmount(refundTarget).toFixed(2)}
                 </div>
                 <div className="text-gray-500 mt-1">
-                  支付方式：{refundTarget.paymentMethod || '未记录'}
+                  支付方式：{refundTarget.paymentMethod || "未记录"}
                 </div>
               </div>
 
@@ -920,7 +982,9 @@ export function More() {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>取消</AlertDialogCancel>
-            <AlertDialogAction onClick={handleLogout}>确认退出</AlertDialogAction>
+            <AlertDialogAction onClick={handleLogout}>
+              确认退出
+            </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
@@ -946,17 +1010,17 @@ export function More() {
                     onClick={() => setSelectedMember(member)}
                     className={`w-full border rounded-lg p-3 text-left transition ${
                       selectedMember?.id === member.id
-                        ? 'border-blue-500 bg-blue-50'
-                        : 'bg-white'
+                        ? "border-blue-500 bg-blue-50"
+                        : "bg-white"
                     }`}
                   >
                     <div className="flex items-center justify-between">
                       <div>
                         <div className="font-medium text-gray-900">
-                          {member.name || '未命名会员'}
+                          {member.name || "未命名会员"}
                         </div>
                         <div className="text-sm text-gray-500 mt-1">
-                          {member.phone || '未绑定手机号'}
+                          {member.phone || "未绑定手机号"}
                         </div>
                       </div>
                       <div className="text-right">
@@ -969,9 +1033,7 @@ export function More() {
                   </button>
                 ))
               ) : (
-                <div className="text-center text-gray-500 py-6">
-                  暂无会员
-                </div>
+                <div className="text-center text-gray-500 py-6">暂无会员</div>
               )}
             </div>
 
@@ -981,10 +1043,10 @@ export function More() {
                   <div>
                     <div className="text-sm text-gray-500">选中会员</div>
                     <div className="text-lg font-semibold">
-                      {selectedMember.name || '未命名会员'}
+                      {selectedMember.name || "未命名会员"}
                     </div>
                     <div className="text-sm text-gray-500">
-                      {selectedMember.phone || '未绑定手机号'}
+                      {selectedMember.phone || "未绑定手机号"}
                     </div>
                   </div>
                   <div className="text-right">
@@ -1060,16 +1122,18 @@ export function More() {
                           >
                             <div>
                               <div className="font-medium">
-                                {entry.note?.includes('订单退款')
-                                  ? '退款'
-                                  : entry.type === 'recharge'
-                                    ? '充值'
-                                    : entry.type === 'consume'
-                                      ? '消费'
-                                      : '调整'}
+                                {entry.note?.includes("订单退款")
+                                  ? "退款"
+                                  : entry.type === "recharge"
+                                    ? "充值"
+                                    : entry.type === "consume"
+                                      ? "消费"
+                                      : "调整"}
                               </div>
                               <div className="text-xs text-gray-500">
-                                {new Date(entry.createdAt).toLocaleString('zh-CN')}
+                                {new Date(entry.createdAt).toLocaleString(
+                                  "zh-CN",
+                                )}
                               </div>
                               {entry.note && (
                                 <div className="text-xs text-gray-500 mt-1">
@@ -1081,11 +1145,11 @@ export function More() {
                               <div
                                 className={`font-semibold ${
                                   entry.amount >= 0
-                                    ? 'text-green-600'
-                                    : 'text-red-600'
+                                    ? "text-green-600"
+                                    : "text-red-600"
                                 }`}
                               >
-                                {entry.amount >= 0 ? '+' : ''}
+                                {entry.amount >= 0 ? "+" : ""}
                                 {entry.amount.toFixed(2)}
                               </div>
                               <div className="text-xs text-gray-500">
@@ -1116,7 +1180,7 @@ export function More() {
                               {order.orderNo || order.id}
                             </div>
                             <div className="text-xs text-gray-500">
-                              {new Date(order.date).toLocaleString('zh-CN')}
+                              {new Date(order.date).toLocaleString("zh-CN")}
                             </div>
                           </div>
                           <div className="font-semibold">
@@ -1181,13 +1245,17 @@ export function More() {
                               <Input
                                 type="number"
                                 value={editRuleThreshold}
-                                onChange={(e) => setEditRuleThreshold(e.target.value)}
+                                onChange={(e) =>
+                                  setEditRuleThreshold(e.target.value)
+                                }
                                 placeholder="门槛金额"
                               />
                               <Input
                                 type="number"
                                 value={editRuleAmount}
-                                onChange={(e) => setEditRuleAmount(e.target.value)}
+                                onChange={(e) =>
+                                  setEditRuleAmount(e.target.value)
+                                }
                                 placeholder="减免金额"
                               />
                             </div>
@@ -1213,7 +1281,9 @@ export function More() {
                                 <Input
                                   type="date"
                                   value={editRuleStart}
-                                  onChange={(e) => setEditRuleStart(e.target.value)}
+                                  onChange={(e) =>
+                                    setEditRuleStart(e.target.value)
+                                  }
                                   className="pr-10 appearance-none [&::-webkit-calendar-picker-indicator]:opacity-0"
                                 />
                                 <Calendar className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
@@ -1222,7 +1292,9 @@ export function More() {
                                 <Input
                                   type="date"
                                   value={editRuleEnd}
-                                  onChange={(e) => setEditRuleEnd(e.target.value)}
+                                  onChange={(e) =>
+                                    setEditRuleEnd(e.target.value)
+                                  }
                                   className="pr-10 appearance-none [&::-webkit-calendar-picker-indicator]:opacity-0"
                                 />
                                 <Calendar className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
@@ -1245,17 +1317,19 @@ export function More() {
                           <>
                             <div className="font-medium">{rule.name}</div>
                             <div className="text-xs text-gray-500 mt-1">
-                              范围：{rule.scope === 'all'
-                                ? '商品+服务'
-                                : rule.scope === 'product'
-                                  ? '商品'
-                                  : '服务'}
-                              · 满¥{rule.threshold.toFixed(2)} 减¥{rule.amount.toFixed(2)}
+                              范围：
+                              {rule.scope === "all"
+                                ? "商品+服务"
+                                : rule.scope === "product"
+                                  ? "商品"
+                                  : "服务"}
+                              · 满¥{rule.threshold.toFixed(2)} 减¥
+                              {rule.amount.toFixed(2)}
                             </div>
                             {(rule.startAt || rule.endAt) && (
                               <div className="text-xs text-gray-500 mt-1">
-                                {rule.startAt ? `开始 ${rule.startAt}` : ''}
-                                {rule.endAt ? ` 结束 ${rule.endAt}` : ''}
+                                {rule.startAt ? `开始 ${rule.startAt}` : ""}
+                                {rule.endAt ? ` 结束 ${rule.endAt}` : ""}
                               </div>
                             )}
                           </>
@@ -1364,25 +1438,33 @@ export function More() {
                           <div className="space-y-2">
                             <Input
                               value={editCouponName}
-                              onChange={(e) => setEditCouponName(e.target.value)}
+                              onChange={(e) =>
+                                setEditCouponName(e.target.value)
+                              }
                               placeholder="优惠券名称"
                             />
                             <Input
                               value={editCouponCode}
-                              onChange={(e) => setEditCouponCode(e.target.value)}
+                              onChange={(e) =>
+                                setEditCouponCode(e.target.value)
+                              }
                               placeholder="券码（可选）"
                             />
                             <div className="grid grid-cols-2 gap-2">
                               <Input
                                 type="number"
                                 value={editCouponThreshold}
-                                onChange={(e) => setEditCouponThreshold(e.target.value)}
+                                onChange={(e) =>
+                                  setEditCouponThreshold(e.target.value)
+                                }
                                 placeholder="门槛金额"
                               />
                               <Input
                                 type="number"
                                 value={editCouponAmount}
-                                onChange={(e) => setEditCouponAmount(e.target.value)}
+                                onChange={(e) =>
+                                  setEditCouponAmount(e.target.value)
+                                }
                                 placeholder="减免金额"
                               />
                             </div>
@@ -1406,7 +1488,9 @@ export function More() {
                             <Input
                               type="number"
                               value={editCouponUsageLimit}
-                              onChange={(e) => setEditCouponUsageLimit(e.target.value)}
+                              onChange={(e) =>
+                                setEditCouponUsageLimit(e.target.value)
+                              }
                               placeholder="使用次数限制（可选）"
                             />
                             <div className="grid grid-cols-2 gap-2">
@@ -1414,7 +1498,9 @@ export function More() {
                                 <Input
                                   type="date"
                                   value={editCouponStart}
-                                  onChange={(e) => setEditCouponStart(e.target.value)}
+                                  onChange={(e) =>
+                                    setEditCouponStart(e.target.value)
+                                  }
                                   className="pr-10 appearance-none [&::-webkit-calendar-picker-indicator]:opacity-0"
                                 />
                                 <Calendar className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
@@ -1423,7 +1509,9 @@ export function More() {
                                 <Input
                                   type="date"
                                   value={editCouponEnd}
-                                  onChange={(e) => setEditCouponEnd(e.target.value)}
+                                  onChange={(e) =>
+                                    setEditCouponEnd(e.target.value)
+                                  }
                                   className="pr-10 appearance-none [&::-webkit-calendar-picker-indicator]:opacity-0"
                                 />
                                 <Calendar className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
@@ -1446,23 +1534,24 @@ export function More() {
                           <>
                             <div className="font-medium">{coupon.name}</div>
                             <div className="text-xs text-gray-500 mt-1">
-                              范围：{coupon.scope === 'all'
-                                ? '商品+服务'
-                                : coupon.scope === 'product'
-                                  ? '商品'
-                                  : '服务'}
+                              范围：
+                              {coupon.scope === "all"
+                                ? "商品+服务"
+                                : coupon.scope === "product"
+                                  ? "商品"
+                                  : "服务"}
                               {coupon.threshold
                                 ? ` · 满¥${coupon.threshold.toFixed(2)}`
-                                : ''}
+                                : ""}
                               · 减¥{coupon.amount.toFixed(2)}
                             </div>
                             {(coupon.startAt || coupon.endAt) && (
                               <div className="text-xs text-gray-500 mt-1">
-                                {coupon.startAt ? `开始 ${coupon.startAt}` : ''}
-                                {coupon.endAt ? ` 结束 ${coupon.endAt}` : ''}
+                                {coupon.startAt ? `开始 ${coupon.startAt}` : ""}
+                                {coupon.endAt ? ` 结束 ${coupon.endAt}` : ""}
                               </div>
                             )}
-                            {typeof coupon.usageLimit === 'number' && (
+                            {typeof coupon.usageLimit === "number" && (
                               <div className="text-xs text-gray-500 mt-1">
                                 使用次数：{coupon.usedCount}/{coupon.usageLimit}
                               </div>

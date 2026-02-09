@@ -1,11 +1,11 @@
 "use client";
 
-import React from 'react';
+import React from "react";
 import { useRouter } from "next/navigation";
-import { useAuth } from '../contexts/AuthContext';
-import { useData } from '../contexts/DataContext';
-import { ShoppingCart, Package, AlertTriangle, TrendingUp } from 'lucide-react';
-import { Button } from '../components/ui/button';
+import { useAuth } from "../contexts/AuthContext";
+import { useData } from "../contexts/DataContext";
+import { ShoppingCart, Package, AlertTriangle, TrendingUp } from "lucide-react";
+import { Button } from "../components/ui/button";
 
 export function Home() {
   const router = useRouter();
@@ -14,7 +14,7 @@ export function Home() {
   const stats = getTodayStats();
 
   const lowStockProducts = products.filter(
-    p => p.lowStockThreshold && p.stock <= p.lowStockThreshold
+    (p) => p.lowStockThreshold && p.stock <= p.lowStockThreshold,
   );
 
   return (
@@ -23,14 +23,14 @@ export function Home() {
       <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-6 rounded-b-3xl">
         <div className="mb-4">
           <h1 className="text-xl font-semibold">
-            {user?.storeName || '宠物店门店系统'}
+            {user?.storeName || "老友记宠物收银系统"}
           </h1>
           <p className="text-blue-100 text-sm mt-1">
-            {new Date().toLocaleDateString('zh-CN', {
-              year: 'numeric',
-              month: 'long',
-              day: 'numeric',
-              weekday: 'long',
+            {new Date().toLocaleDateString("zh-CN", {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+              weekday: "long",
             })}
           </p>
         </div>
@@ -38,9 +38,7 @@ export function Home() {
         {/* Today Stats */}
         <div className="grid grid-cols-3 gap-3">
           <div className="bg-white/10 backdrop-blur-sm rounded-xl p-3">
-            <div className="text-2xl font-bold">
-              {stats.todayOrders}
-            </div>
+            <div className="text-2xl font-bold">{stats.todayOrders}</div>
             <div className="text-xs text-blue-100 mt-1">今日订单</div>
           </div>
           <div className="bg-white/10 backdrop-blur-sm rounded-xl p-3">
@@ -50,9 +48,7 @@ export function Home() {
             <div className="text-xs text-blue-100 mt-1">今日销售额</div>
           </div>
           <div className="bg-white/10 backdrop-blur-sm rounded-xl p-3">
-            <div className="text-2xl font-bold">
-              {stats.lowStockCount}
-            </div>
+            <div className="text-2xl font-bold">{stats.lowStockCount}</div>
             <div className="text-xs text-blue-100 mt-1">低库存商品</div>
           </div>
         </div>
@@ -103,7 +99,9 @@ export function Home() {
                   className="bg-orange-50 border border-orange-200 rounded-lg p-3 flex items-center justify-between"
                 >
                   <div className="flex-1">
-                    <div className="font-medium text-gray-900">{product.name}</div>
+                    <div className="font-medium text-gray-900">
+                      {product.name}
+                    </div>
                     <div className="text-sm text-gray-600 mt-1">
                       当前库存: {product.stock} 件
                     </div>
@@ -129,9 +127,7 @@ export function Home() {
             <p className="text-gray-500 text-sm mb-6">
               从添加商品开始，管理您的门店库存
             </p>
-            <Button onClick={() => router.push("/inventory")}>
-              添加商品
-            </Button>
+            <Button onClick={() => router.push("/inventory")}>添加商品</Button>
           </div>
         )}
 

@@ -18,7 +18,9 @@ export default function ReceiptPage() {
 
   const order = useMemo(() => {
     if (!orderId) return undefined;
-    return orders.find((item) => item.id === orderId || item.orderNo === orderId);
+    return orders.find(
+      (item) => item.id === orderId || item.orderNo === orderId,
+    );
   }, [orderId, orders]);
 
   const orderRefunds = useMemo(() => {
@@ -63,7 +65,7 @@ export default function ReceiptPage() {
       <div className="max-w-md mx-auto bg-white min-h-screen p-6 space-y-5">
         <div className="text-center border-b pb-4">
           <div className="text-xl font-bold">
-            {user?.storeName || "宠物店门店系统"}
+            {user?.storeName || "老友记宠物收银系统"}
           </div>
           <div className="text-sm text-gray-500 mt-2">
             电子凭证 · {order.orderNo || order.id}
@@ -97,12 +99,13 @@ export default function ReceiptPage() {
               <span>{order.paymentMethod}</span>
             </div>
           )}
-          {typeof order.discountAmount === "number" && order.discountAmount > 0 && (
-            <div className="flex justify-between text-sm">
-              <span className="text-gray-600">优惠金额</span>
-              <span>-¥{order.discountAmount.toFixed(2)}</span>
-            </div>
-          )}
+          {typeof order.discountAmount === "number" &&
+            order.discountAmount > 0 && (
+              <div className="flex justify-between text-sm">
+                <span className="text-gray-600">优惠金额</span>
+                <span>-¥{order.discountAmount.toFixed(2)}</span>
+              </div>
+            )}
           {typeof order.payableTotal === "number" && (
             <div className="flex justify-between text-sm">
               <span className="text-gray-600">应收金额</span>
@@ -128,7 +131,8 @@ export default function ReceiptPage() {
               item.type === "service" && item.serviceId
                 ? getServiceById(item.serviceId)
                 : undefined;
-            const itemName = product?.name || service?.name || item.name || "项目";
+            const itemName =
+              product?.name || service?.name || item.name || "项目";
             return (
               <div key={index} className="flex justify-between text-sm">
                 <div className="flex-1">
@@ -157,7 +161,10 @@ export default function ReceiptPage() {
           <div className="border-t pt-3 space-y-2">
             <div className="font-medium text-sm">退款记录</div>
             {orderRefunds.map((refund) => (
-              <div key={refund.id} className="flex items-start justify-between text-sm">
+              <div
+                key={refund.id}
+                className="flex items-start justify-between text-sm"
+              >
                 <div>
                   <div className="text-gray-700">
                     退款 ¥{refund.amount.toFixed(2)}
@@ -181,7 +188,11 @@ export default function ReceiptPage() {
             <Copy className="h-4 w-4 mr-2" />
             复制凭证链接
           </Button>
-          <Button onClick={() => window.print()} variant="outline" className="w-full">
+          <Button
+            onClick={() => window.print()}
+            variant="outline"
+            className="w-full"
+          >
             <Printer className="h-4 w-4 mr-2" />
             打印凭证
           </Button>
