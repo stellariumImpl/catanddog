@@ -1,0 +1,324 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum OrderItemType {
+  product
+  service
+}
+
+enum StockLedgerType {
+  stock_in
+  stock_out
+  adjustment
+}
+
+enum OrderStatus {
+  draft
+  confirmed
+  cancelled
+  refunded
+}
+
+enum StockInStatus {
+  draft
+  confirmed
+}
+
+enum PaymentStatus {
+  paid
+  unpaid
+  refunded
+}
+
+enum CustomerLedgerType {
+  recharge
+  consume
+  adjust
+}
+
+enum DiscountScope {
+  all
+  product
+  service
+}
+
+model User {
+  id           String      @id
+  username     String      @unique
+  passwordHash String
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime
+  tokens       SyncToken[]
+  products     Product[]
+  services     Service[]
+  customers    Customer[]
+  customerLedger CustomerLedger[]
+  discountRules DiscountRule[]
+  coupons      Coupon[]
+  storeSetting StoreSetting?
+  suppliers    Supplier[]
+  stockIns     StockInRecord[]
+  orders       Order[]
+  receipts     Receipt[]
+  refunds      Refund[]
+  ledgers      StockLedger[]
+  batches      InventoryBatch[]
+  deletions    Deletion[]
+}
+
+model SyncToken {
+  id         String   @id
+  token      String   @unique
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+  createdAt  DateTime @default(now())
+  lastUsedAt DateTime
+}
+
+model Product {
+  id                 String   @id
+  userId             String
+  user               User     @relation(fields: [userId], references: [id])
+  name               String
+  barcode            String?
+  price              Float
+  cost               Float?
+  stock              Int
+  lowStockThreshold  Int?
+  createdAt          DateTime
+  updatedAt          DateTime
+  ledgers            StockLedger[]
+  batches            InventoryBatch[]
+  stockInItems       StockInItem[]
+  orderItems         OrderItem[]
+}
+
+model Service {
+  id              String   @id
+  userId          String
+  user            User     @relation(fields: [userId], references: [id])
+  name            String
+  price           Float
+  durationMinutes Int?
+  note            String?
+  createdAt       DateTime
+  updatedAt       DateTime
+  orderItems      OrderItem[]
+}
+
+model Customer {
+  id        String   @id
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  name      String?
+  phone     String?
+  balance   Float
+  createdAt DateTime
+  updatedAt DateTime
+  orders    Order[]
+  ledger    CustomerLedger[]
+}
+
+model CustomerLedger {
+  id           String             @id
+  userId       String
+  user         User               @relation(fields: [userId], references: [id])
+  customerId   String
+  customer     Customer           @relation(fields: [customerId], references: [id])
+  type         CustomerLedgerType
+  amount       Float
+  balanceAfter Float
+  note         String?
+  relatedId    String?
+  createdAt    DateTime
+}
+
+model Supplier {
+  id        String   @id
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  name      String
+  contact   String?
+  phone     String?
+  note      String?
+  createdAt DateTime
+  updatedAt DateTime
+  stockIns  StockInRecord[]
+  batches   InventoryBatch[]
+}
+
+model StockInRecord {
+  id            String        @id
+  userId        String
+  user          User          @relation(fields: [userId], references: [id])
+  items         StockInItem[]
+  date          DateTime
+  note          String?
+  supplierId    String?
+  supplier      Supplier?     @relation(fields: [supplierId], references: [id])
+  batchNo       String?
+  expiresAt     DateTime?
+  status        StockInStatus
+  totalQuantity Int
+  totalCost     Float?
+  createdAt     DateTime
+  updatedAt     DateTime
+}
+
+model StockInItem {
+  id        String        @id
+  stockInId String
+  stockIn   StockInRecord @relation(fields: [stockInId], references: [id])
+  productId String
+  product   Product       @relation(fields: [productId], references: [id])
+  quantity  Int
+  cost      Float?
+}
+
+model Order {
+  id            String        @id
+  orderNo       String
+  userId        String
+  user          User          @relation(fields: [userId], references: [id])
+  items         OrderItem[]
+  customerId    String?
+  customer      Customer?     @relation(fields: [customerId], references: [id])
+  date          DateTime
+  total         Float
+  paymentMethod String?
+  paymentAmount Float?
+  discountAmount Float       @default(0)
+  discountType  String?
+  discountName  String?
+  discountRuleId String?
+  discountRate  Float?
+  payableTotal  Float        @default(0)
+  paymentStatus PaymentStatus
+  status        OrderStatus
+  createdAt     DateTime
+  updatedAt     DateTime
+  receipt       Receipt?
+  refunds       Refund[]
+}
+
+model DiscountRule {
+  id        String        @id
+  userId    String
+  user      User          @relation(fields: [userId], references: [id])
+  name      String
+  scope     DiscountScope
+  threshold Float
+  amount    Float
+  startAt   DateTime?
+  endAt     DateTime?
+  enabled   Boolean
+  createdAt DateTime
+  updatedAt DateTime
+}
+
+model Coupon {
+  id         String        @id
+  userId     String
+  user       User          @relation(fields: [userId], references: [id])
+  name       String
+  code       String?
+  scope      DiscountScope
+  threshold  Float?
+  amount     Float
+  startAt    DateTime?
+  endAt      DateTime?
+  enabled    Boolean
+  usageLimit Int?
+  usedCount  Int           @default(0)
+  createdAt  DateTime
+  updatedAt  DateTime
+}
+
+model StoreSetting {
+  id                 String   @id
+  userId             String   @unique
+  user               User     @relation(fields: [userId], references: [id])
+  memberDiscountRate Float
+  paymentMethods     Json?
+  createdAt          DateTime
+  updatedAt          DateTime
+}
+
+model Refund {
+  id        String   @id
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  orderId   String
+  order     Order    @relation(fields: [orderId], references: [id])
+  amount    Float
+  reason    String?
+  createdAt DateTime
+}
+
+model OrderItem {
+  id        String        @id
+  orderId   String
+  order     Order         @relation(fields: [orderId], references: [id])
+  type      OrderItemType
+  productId String?
+  product   Product?      @relation(fields: [productId], references: [id])
+  serviceId String?
+  service   Service?      @relation(fields: [serviceId], references: [id])
+  name      String?
+  quantity  Int
+  price     Float
+}
+
+model Receipt {
+  id        String   @id
+  orderId   String   @unique
+  order     Order    @relation(fields: [orderId], references: [id])
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime
+}
+
+model StockLedger {
+  id        String          @id
+  userId    String
+  user      User            @relation(fields: [userId], references: [id])
+  productId String
+  product   Product         @relation(fields: [productId], references: [id])
+  type      StockLedgerType
+  quantity  Int
+  date      DateTime
+  relatedId String?
+  note      String?
+}
+
+model InventoryBatch {
+  id         String   @id
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+  productId  String
+  product    Product  @relation(fields: [productId], references: [id])
+  supplierId String?
+  supplier   Supplier? @relation(fields: [supplierId], references: [id])
+  batchNo    String?
+  quantity   Int
+  cost       Float?
+  expiresAt  DateTime?
+  receivedAt DateTime
+  stockInId  String?
+}
+
+model Deletion {
+  id         String   @id
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+  collection String
+  recordId   String
+  deletedAt  DateTime
+}
